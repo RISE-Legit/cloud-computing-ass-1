@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <title>BigQuery App</title>
+</head>
+<body>
+    <div class="button-container">
+        <button class="button" onclick="fetchQuery1()">Run Query 1</button>
+        <button class="button" onclick="fetchQuery2()">Run Query 2</button>
+        <button class="button" onclick="fetchQuery3()">Run Query 3</button>
+    </div>
+    <div id="results1"></div>
+    <div id="results2"></div>
+    <div id="results3"></div>
+    <div id="tableContainer"></div>
+    <script>
+        function renderTable(data, orderedKeys) {
+
+            // Create table.
+            let table = document.createElement('table');
+
+            // Add header.
+            let thead = table.createTHead();
+            let headerRow = thead.insertRow();
+            orderedKeys.forEach(key => {
+                let th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+        
+            // Add body.
+            let tbody = table.createTBody();
+            data.forEach(row => {
+                let tr = tbody.insertRow();
+                orderedKeys.forEach(key => {
+                    let td = tr.insertCell();
+                    if (key in row && !isNaN(row[key])) {
+                        td.textContent = parseInt(row[key]).toLocaleString();
+                    } else {
+                        td.textContent = row[key];
+                    }
+                });
+            });
+            let container = document.getElementById('tableContainer');
+
+            // Clear any previous table.
+            container.innerHTML = '';
+            container.appendChild(table);
+        }
+
+        function fetchQuery1() {
+            fetch('/query1')
+                .then(response => response.json())
+                .then(data => {
+                    const orderedKeys = ['Year', 'Month', 'time_ref', 'Trade_Value'];
+                    renderTable(data, orderedKeys);
+                });
+        }
+
+        function fetchQuery2() {
+            fetch('/query2')
+                .then(response => response.json())
+                .then(data => {
+                    const orderedKeys = ['country_label', 'product_type', 'trade deficit value', 'status'];
+                    renderTable(data, orderedKeys);
+                });
+        }
+
+        function fetchQuery3() {
+            fetch('/query3')
+                .then(response => response.json())
+                .then(data => {
+                    const orderedKeys = ['service_label', 'trade_surplus_value'];
+                    renderTable(data, orderedKeys);
+                });
+        }
+    </script>
+</body>
+</html>

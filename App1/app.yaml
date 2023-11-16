@@ -1,0 +1,3 @@
+runtime: python39
+env_variables:
+  GOOGLE_APPLICATION_CREDENTIALS: "s3814655-oua23sp3-task-1-f4e33b01c1cb.json"
